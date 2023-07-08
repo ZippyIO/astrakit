@@ -3,18 +3,20 @@ import * as RadixTabs from '@radix-ui/react-tabs';
 import { ComponentProps, createContext } from 'react';
 import { tv } from 'tailwind-variants';
 
-type Colors = 'red' | 'blue' | 'green';
+type Colors = 'red' | 'blue' | 'green' | 'light' | 'dark';
 
 type TabsContextType = {
   variant: 'default' | 'solid';
   orientation?: 'horizontal' | 'vertical';
-  listColor?: Colors;
+  listColor: Colors;
+  listBg: 'none' | 'light' | 'dark';
 };
 
 export type RootProps = ComponentProps<typeof RadixTabs.Root> & {
   variant?: 'default' | 'solid';
   orientation?: 'horizontal' | 'vertical';
   color?: Colors;
+  listBg?: 'none' | 'light' | 'dark';
 };
 
 export type ListProps = ComponentProps<typeof RadixTabs.List>;
@@ -29,12 +31,12 @@ const rootTv = tv({
   base: 'flex w-[300px] rounded-lg overflow-hidden',
   variants: {
     orientation: {
-      horizontal: 'flex-row',
-      vertical: 'flex-col',
+      horizontal: 'flex-col',
+      vertical: 'flex-row',
     },
   },
   defaultVariants: {
-    orientation: 'horizontal',
+    orientation: 'vertical',
   },
 });
 
@@ -42,63 +44,80 @@ const listTv = tv({
   base: 'flex',
   variants: {
     orientation: {
-      horizontal: 'flex-col',
-      vertical: 'flex-row',
+      horizontal: 'flex-row',
+      vertical: 'flex-col',
     },
   },
   defaultVariants: {
-    orientation: 'horizontal',
+    orientation: 'vertical',
   },
 });
 
 const triggerDefaultTv = tv({
-  base: 'text-sm font-medium border-zinc-800 w-full text-white',
+  base: 'text-sm font-medium border-zinc-800 w-full',
   variants: {
     color: {
       red: 'radix-state-active:border-red-500',
       blue: 'radix-state-active:border-blue-500',
       green: 'radix-state-active:border-green-500',
+      light: 'radix-state-active:border-white',
+      dark: 'radix-state-active:border-black',
     },
     orientation: {
-      horizontal: 'border-r-2 p-2',
-      vertical: 'border-b-2 p-1',
+      horizontal: 'border-b-2 p-1',
+      vertical: 'border-r-2 p-2',
+    },
+    bg: {
+      none: 'text-black dark:text-white',
+      light: 'bg-zinc-200 text-black',
+      dark: 'bg-zinc-900 text-white',
     },
   },
   defaultVariants: {
     color: 'blue',
-    orientation: 'horizontal',
+    orientation: 'vertical',
+    bg: 'none',
   },
 });
 
 const triggerSolidTv = tv({
-  base: 'text-sm font-medium border-zinc-800 w-full text-white',
+  base: 'text-sm font-medium border-zinc-800 w-full',
   variants: {
     color: {
-      red: 'radix-state-active:bg-red-500',
-      blue: 'radix-state-active:bg-blue-500 bg-white dark:bg-black',
-      green: 'radix-state-active:bg-green-500',
+      red: 'radix-state-active:bg-red-500 dark:radix-state-active:bg-red-500 bg-zinc-900 text-zinc-100',
+      blue: 'radix-state-active:bg-blue-600 dark:radix-state-active:bg-blue-600 bg-zinc-900 text-zinc-100',
+      green:
+        'radix-state-active:bg-green-600 dark:radix-state-active:bg-green-600 bg-zinc-900 text-zinc-50',
+      light: 'radix-state-active:bg-white bg-zinc-200 text-black',
+      dark: 'radix-state-active:bg-zinc-900 bg-zinc-800 text-zinc-200',
     },
     orientation: {
-      horizontal: 'p-2',
-      vertical: 'p-1',
+      horizontal: 'p-1',
+      vertical: 'p-2',
     },
   },
   defaultVariants: {
     color: 'blue',
-    orientation: 'horizontal',
+    orientation: 'vertical',
   },
 });
 
 const TabsContext = createContext<TabsContextType>({
   variant: 'default',
-  orientation: 'vertical',
+  orientation: 'horizontal',
   listColor: 'blue',
+  listBg: 'none',
 });
 
-const Root = ({ variant, orientation, color, children, ...rest }: RootProps) => {
+const Root = ({ variant, orientation, color, listBg, children, ...rest }: RootProps) => {
   return (
     <TabsContext.Provider
-      value={{ orientation, listColor: color, variant: variant ? variant : 'default' }}
+      value={{
+        variant: variant ? variant : 'default',
+        orientation,
+        listColor: color ? color : 'blue',
+        listBg: listBg ? listBg : 'none',
+      }}
     >
       <RadixTabs.Root className={rootTv({ orientation: orientation })} {...rest}>
         {children}
@@ -127,11 +146,12 @@ const Trigger = ({ color, children, ...rest }: TriggerProps) => {
 
   return (
     <TabsContext.Consumer>
-      {({ variant, orientation, listColor }) => (
+      {({ variant, orientation, listColor, listBg }) => (
         <RadixTabs.Trigger
           className={trigger[variant]({
             orientation: orientation,
             color: color ? color : listColor,
+            bg: listBg,
           })}
           {...rest}
         >

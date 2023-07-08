@@ -2,8 +2,14 @@ import { type Meta, type StoryObj } from '@storybook/react';
 
 import Tabs, { RootProps } from '~/components/Tabs';
 
-const CompleteTab = ({ variant, color, orientation }: RootProps) => (
-  <Tabs variant={variant} defaultValue="home" orientation={orientation} color={color}>
+const CompleteTab = ({ variant, orientation, color, listBg }: RootProps) => (
+  <Tabs
+    variant={variant}
+    defaultValue="home"
+    orientation={orientation}
+    color={color}
+    listBg={listBg}
+  >
     <Tabs.List>
       <Tabs.Trigger value="home">Home</Tabs.Trigger>
       <Tabs.Trigger value="account">Account</Tabs.Trigger>
@@ -20,19 +26,24 @@ const meta = {
   component: CompleteTab,
   argTypes: {
     variant: {
-      defaultValue: 'default',
       options: ['default', 'solid'],
       control: { type: 'select' },
-    },
-    color: {
-      defaultValue: 'blue',
-      options: ['red', 'blue', 'green'],
-      control: { type: 'select' },
+      description: 'Styling Variant - [default, solid]',
     },
     orientation: {
-      defaultValue: 'vertical',
       options: ['horizontal', 'vertical'],
       control: { type: 'select' },
+      description: 'Orientation - [horizontal, vertical]',
+    },
+    color: {
+      options: ['red', 'blue', 'green', 'light', 'dark'],
+      control: { type: 'select' },
+      description: 'Tab Border/Bg Color - [red, blue, green, light, dark]',
+    },
+    listBg: {
+      options: ['none', 'light', 'dark'],
+      control: { type: 'select' },
+      description: 'Tab Trigger Bg Color - [none, light, dark] (Default Variant only)',
     },
   },
 } satisfies Meta<typeof CompleteTab>;
@@ -43,7 +54,35 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     variant: 'default',
+    orientation: 'horizontal',
     color: 'blue',
+    listBg: 'none',
+  },
+};
+
+export const DefaultVertical: Story = {
+  args: {
+    variant: 'default',
     orientation: 'vertical',
+    color: 'blue',
+    listBg: 'none',
+  },
+};
+
+export const SolidHorizontal: Story = {
+  args: {
+    variant: 'solid',
+    orientation: 'horizontal',
+    color: 'blue',
+    listBg: 'none',
+  },
+};
+
+export const SolidVertical: Story = {
+  args: {
+    variant: 'solid',
+    orientation: 'vertical',
+    color: 'blue',
+    listBg: 'none',
   },
 };

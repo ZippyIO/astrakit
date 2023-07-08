@@ -1,5 +1,6 @@
+import '../src/styles/globals.css';
+
 import type { Preview } from '@storybook/react';
-import { addons } from '@storybook/manager-api';
 import { themes } from '@storybook/theming';
 
 const preview: Preview = {

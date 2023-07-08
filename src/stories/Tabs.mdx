@@ -1,0 +1,27 @@
+{/* Tabs.mdx */}
+
+import { Canvas, Primary, Meta, ArgTypes } from '@storybook/blocks';
+
+import * as TabStories from './Tabs.stories';
+
+<Meta of={TabStories} />
+
+# Tabs
+
+<ArgTypes of={TabStories.Default} />
+
+## Default - Horizontal
+
+<Canvas of={TabStories.Default} sourceState="shown" />
+
+## Default - Vertical
+
+<Canvas of={TabStories.DefaultVertical} sourceState="shown" />
+
+## Solid - Horizontal
+
+<Canvas of={TabStories.SolidHorizontal} sourceState="shown" />
+
+## Solid - Vertical
+
+<Canvas of={TabStories.SolidVertical} sourceState="shown" />
